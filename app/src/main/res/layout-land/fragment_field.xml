@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FieldFragment">
+
+<LinearLayout
+    android:gravity="center"
+    android:layout_margin="30dp"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageButton
+
+        android:id="@+id/left"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_weight="1"
+        android:background="@drawable/ic_chevron_left_black_24dp" />
+    <ImageView
+        android:id="@+id/field"
+        android:src="@drawable/field1"
+        android:scaleY="1"
+        android:layout_weight="3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/right"
+        android:layout_width="0dp"
+        android:layout_height="115dp"
+        android:layout_weight="1"
+        android:background="@drawable/ic_chevron_right_black_24dp" />
+</LinearLayout>
+
+</FrameLayout>
