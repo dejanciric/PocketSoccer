@@ -1,6 +1,7 @@
 package com.example.cira.pocketsoccer;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -20,9 +21,12 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class FieldFragment extends Fragment {
-
+    private SharedPreferences.Editor editor;
+    private SharedPreferences sharedPreferences;
     private static Context context;
     private ImageView field;
     private Fragment fragment = this;
@@ -74,6 +78,19 @@ public class FieldFragment extends Fragment {
                 ((MainActivity)context).backFragment();
             }
         });
+        // set last settings or default
+         sharedPreferences = context.getSharedPreferences("lastValues", MODE_PRIVATE);
+        int s = sharedPreferences.getInt("field", -1);
+        if (s != -1){
+            ((MainActivity)context).setField(s);
+            field.setImageResource(fields.get(s));
+            curr = s;
+        }else{
+            ((MainActivity)context).setField(0);
+            field.setImageResource(fields.get(0));
+            curr=  0;
+        }
+
         return view;
     }
 
@@ -91,12 +108,21 @@ public class FieldFragment extends Fragment {
                         if (curr < 0)
                             curr = fields.size()-1;
                         field.setImageResource(fields.get(curr));
+                        ((MainActivity)context).setField(curr);
+
+                        editor = sharedPreferences.edit();
+                        editor.putInt("field", curr);
+                        editor.commit();
                         break;
                     case R.id.right:
                         ((ImageButton)v).setBackground(getResources().getDrawable(R.drawable.ic_chevron_right_black_24dp));
                         curr = (curr+1) % fields.size();
+                        ((MainActivity)context).setField(curr);
 
                         field.setImageResource(fields.get(curr));
+                        editor = sharedPreferences.edit();
+                        editor.putInt("field",curr);
+                        editor.commit();
                         break;
 
                 }

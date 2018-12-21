@@ -1,11 +1,13 @@
 package com.example.cira.pocketsoccer;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,9 +15,13 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class RulesFragment extends Fragment {
 
+    private SharedPreferences.Editor editor;
+    private SharedPreferences sharedPreferences;
     private Fragment fragment = this;
     private static Context context;
     private TextView value, time, goals;
@@ -63,10 +69,11 @@ public class RulesFragment extends Fragment {
 
         // perform seek bar change listener event used for getting the progress value
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
+            int progressEnd = 0;
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 stringValue = getStringValue(progress);
                 value.setText(stringValue);
+                progressEnd = progress;
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -75,16 +82,26 @@ public class RulesFragment extends Fragment {
 
             public void onStopTrackingTouch(SeekBar seekBar) {
                 value.setText(stringValue);
+                ((MainActivity)context).setEndGameValue(stringValue);
+                if (currType == Type.TIME){
+                    ((MainActivity)context).setTimeProgress(progressEnd);
+                    editor = sharedPreferences.edit();
+                    editor.putInt("timeProgress", progressEnd);
+
+                    editor.commit();
+                }else{
+                    ((MainActivity)context).setGoalsProgress(progressEnd);
+                    editor = sharedPreferences.edit();
+                    editor.putInt("goalsProgress", progressEnd);
+
+                    editor.commit();
+                }
+
             }
         });
 
-        // ovo zameniti sa sharedpreference
-        currType = Type.TIME;
-        seekBar.setProgress(currProgressTime);
-        time.setTextColor(getGoldColor());
-        stringValue = getStringValue(currProgressTime);
-        value.setText(stringValue);
 
+        setProgressBar();
         return view;
     }
 
@@ -148,13 +165,25 @@ public class RulesFragment extends Fragment {
                 switch(v.getId()){
                     case R.id.time:
                         goals.setTextColor(getWhiteColor());
+                        ((MainActivity)context).setRule("time");
+                        //seekBar.setProgress(currProgressTime);
                         currType = Type.TIME;
-                        seekBar.setProgress(currProgressTime);
+                        changeProgressBar("time");
+
+                        editor = sharedPreferences.edit();
+                        editor.putString("rule", "time");
+                        editor.commit();
                         break;
                     case R.id.goals:
                         time.setTextColor(getWhiteColor());
+                        ((MainActivity)context).setRule("goals");
+                        //seekBar.setProgress(currProgressGoals);
                         currType = Type.GOALS;
-                        seekBar.setProgress(currProgressGoals);
+                        changeProgressBar("goals");
+
+                        editor = sharedPreferences.edit();
+                        editor.putString("rule", "goals");
+                        editor.commit();
                         break;
                 }
 
@@ -180,6 +209,109 @@ public class RulesFragment extends Fragment {
         });
     }
 
+    private void setProgressBar(){
+        // set last settings or default
+        sharedPreferences = context.getSharedPreferences("lastValues", MODE_PRIVATE);
+        String s = sharedPreferences.getString("rule", "-1");
+        if (!s.equals("-1")){
+            if (s.equals("time")){
+
+                currType =Type.TIME;
+                int progress = sharedPreferences.getInt("timeProgress", -1);
+                seekBar.setProgress(progress);
+                time.setTextColor(getGoldColor());
+                stringValue = getStringValue(progress);
+                ((MainActivity)context).setTimeProgress(progress);
+                value.setText(stringValue);
+            }else{
+                currType =Type.GOALS;
+                int progress = sharedPreferences.getInt("goalsProgress", -1);
+                seekBar.setProgress(progress);
+                goals.setTextColor(getGoldColor());
+                stringValue = getStringValue(progress);
+                ((MainActivity)context).setGoalsProgress(progress);
+                value.setText(stringValue);
+            }
+            ((MainActivity)context).setRule(s);
+        }else{
+            SharedPreferences sp = context.getSharedPreferences("defaultValues", MODE_PRIVATE);
+            String st = sp.getString("rule", "-1");
+            if (st.equals("time")){
+                currType =Type.TIME;
+                int progress = sp.getInt("timeProgress", -1);
+                seekBar.setProgress(progress);
+                time.setTextColor(getGoldColor());
+                stringValue = getStringValue(progress);
+                ((MainActivity)context).setTimeProgress(progress);
+                value.setText(stringValue);
+            }else{
+                currType =Type.GOALS;
+                int progress = sp.getInt("goalsProgress", -1);
+                seekBar.setProgress(progress);
+                goals.setTextColor(getGoldColor());
+                stringValue = getStringValue(progress);
+                ((MainActivity)context).setGoalsProgress(progress);
+                value.setText(stringValue);
+            }
+            ((MainActivity)context).setRule(s);
+        }
+    }
+
+    private void changeProgressBar(String rule){
+        if (rule.equals("time")){
+            currType =Type.TIME;
+            sharedPreferences = context.getSharedPreferences("lastValues", MODE_PRIVATE);
+            int s = sharedPreferences.getInt("timeProgress", -1);
+            if (s != -1){
+                    seekBar.setProgress(s);
+                    time.setTextColor(getGoldColor());
+                    stringValue = getStringValue(s);
+                    ((MainActivity)context).setTimeProgress(s);
+                    value.setText(stringValue);
+
+            }else{
+                SharedPreferences sp = context.getSharedPreferences("defaultValues", MODE_PRIVATE);
+                int st = sp.getInt("timeProgress", -1);
+
+                    seekBar.setProgress(st);
+                    time.setTextColor(getGoldColor());
+                    stringValue = getStringValue(st);
+                    ((MainActivity)context).setTimeProgress(st);
+                    value.setText(stringValue);
+                editor = sharedPreferences.edit();
+                editor.putInt("timeProgress", st);
+                editor.commit();
+
+
+            }
+        }else{
+            currType =Type.GOALS;
+            sharedPreferences = context.getSharedPreferences("lastValues", MODE_PRIVATE);
+            int s = sharedPreferences.getInt("goalsProgress", -1);
+            if (s != -1){
+                seekBar.setProgress(s);
+                goals.setTextColor(getGoldColor());
+                stringValue = getStringValue(s);
+                ((MainActivity)context).setGoalsProgress(s);
+                value.setText(stringValue);
+
+            }else{
+                SharedPreferences sp = context.getSharedPreferences("defaultValues", MODE_PRIVATE);
+                int st = sp.getInt("goalsProgress", -1);
+
+                seekBar.setProgress(st);
+                goals.setTextColor(getGoldColor());
+                stringValue = getStringValue(st);
+                ((MainActivity)context).setGoalsProgress(st);
+                value.setText(stringValue);
+                editor = sharedPreferences.edit();
+                editor.putInt("goalsProgress", st);
+                editor.commit();
+            }
+        }
+        // set last settings or default
+        ((MainActivity)context).setRule(rule);
+    }
     private int getGoldColor() { return ContextCompat.getColor(context, R.color.gold); }
     private int getWhiteColor() { return ContextCompat.getColor(context, R.color.white); }
 

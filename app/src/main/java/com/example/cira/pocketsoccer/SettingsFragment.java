@@ -1,6 +1,7 @@
 package com.example.cira.pocketsoccer;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -101,6 +104,17 @@ public class SettingsFragment extends Fragment {
                         fragmentTransaction.replace(R.id.frame, speedFragment);
                         break;
                     case R.id.reset:
+                        ((MainActivity)context).popFragment();
+                       /* SharedPreferences sharedPreferences = context.getSharedPreferences("lastValues", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt("speed", 3);
+                        editor.putString("rule", "goals");
+                        editor.putInt("timeProgress", 10);
+                        editor.putInt("goalsProgress", 20);
+                        editor.putInt("field", 0);
+                        editor.commit();*/
+                        SharedPreferences preferences = context.getSharedPreferences("lastValues", MODE_PRIVATE);
+                        preferences.edit().clear().commit();
                        // setAllParamsToDefault();
                         break;
                 }

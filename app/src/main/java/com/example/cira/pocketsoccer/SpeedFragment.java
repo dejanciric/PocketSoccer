@@ -1,6 +1,7 @@
 package com.example.cira.pocketsoccer;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,8 +19,12 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class SpeedFragment extends Fragment {
 
+    private SharedPreferences.Editor editor;
+    private SharedPreferences sharedPreferences;
     private Fragment fragment = this;
     private static Context context;
     private  LinearLayout linearLayout;
@@ -68,6 +73,19 @@ public class SpeedFragment extends Fragment {
         setOnTouchListener(tv4);
         setOnTouchListener(tv5);
 
+        // set last settings or default
+        sharedPreferences = context.getSharedPreferences("lastValues", MODE_PRIVATE);
+        int s = sharedPreferences.getInt("speed", -1);
+        if (s != -1){
+            ((MainActivity)context).setGameSpeed(s);
+            speeds.get(s-1).setTextColor(getGoldColor());
+        }else{
+            SharedPreferences sp = context.getSharedPreferences("defaultValues", MODE_PRIVATE);
+            currSpeed = sp.getInt("speed", -1);
+            ((MainActivity)context).setGameSpeed(currSpeed);
+            speeds.get(currSpeed-1).setTextColor(getGoldColor());
+        }
+
         linearLayout = view.findViewById(R.id.linear_layout_speed);
         return view;
     }
@@ -79,7 +97,12 @@ public class SpeedFragment extends Fragment {
                 final MediaPlayer mp = MediaPlayer.create(context, R.raw.click_sound);
                 mp.start();
                 for (int i = 0; i < speeds.size(); i++){
-                    if (typedView == speeds.get(i))
+                    if (typedView == speeds.get(i)){
+                        editor = sharedPreferences.edit();
+                        editor.putInt("speed", Integer.parseInt(typedView.getText().toString()));
+                        editor.commit();
+                        ((MainActivity)context).setGameSpeed(Integer.parseInt(typedView.getText().toString()));
+                    }
                         currSpeed = i+1;
 
                     speeds.get(i).setTextColor(getWhiteColor());
