@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import beans.Score;
+
 
 public class DefaultFragment extends Fragment {
 
@@ -73,17 +75,22 @@ public class DefaultFragment extends Fragment {
                 mp.start();
                 ((TextView)v).setTextColor(getWhiteColor());
                 ((MainActivity)context).pushFragment(fragment);
+                FragmentManager fragmentManager;
+                FragmentTransaction fragmentTransaction;
                 switch(v.getId()){
                     case R.id.resume:
                         break;
                     case R.id.new_game:
                         break;
                     case R.id.statistics:
+                        StatisticFragment statisticFragment = StatisticFragment.newInstance(context);
+                        fragmentManager = getActivity().getSupportFragmentManager();fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.frame, statisticFragment);
+                        fragmentTransaction.commit();
                         break;
                     case R.id.settings:
                         SettingsFragment settingsFragment = SettingsFragment.newInstance(context);
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentManager = getActivity().getSupportFragmentManager();fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.frame, settingsFragment);
                         fragmentTransaction.commit();
                         break;

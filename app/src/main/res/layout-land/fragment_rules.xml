@@ -49,6 +49,7 @@
             android:layout_height="wrap_content"
             android:text="0:30" />
         <SeekBar
+            style="@style/MySeekBar"
             android:id="@+id/seekbar"
            android:layout_marginLeft="30dp"
             android:layout_marginRight="40dp"

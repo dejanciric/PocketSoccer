@@ -20,6 +20,8 @@ import android.widget.TextView;
 
 import java.util.Stack;
 
+import model.MyDataHelper;
+
 public class MainActivity extends AppCompatActivity {
 
     private int gameSpeed;
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private Context context = this;
     private Stack<Fragment> stackTrace = new Stack<Fragment>();
     private TextView back;
-
+    private MyDataHelper model;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,21 @@ public class MainActivity extends AppCompatActivity {
         setOnTouchListener(back);
 
         //setDefaultValues();
+        model = new MyDataHelper(this);
+       /* model.addScore("kurta", "mika", "1:3", 2);
+        model.addScore("murta", "mika", "1:2", 2);
+        model.addScore("mica", "mika", "3:0", 1);
+        model.addScore("joca", "pera", "1:3", 2);
+        model.addScore("jakov", "pera", "3:1", 1);
+        model.addScore("ziza", "mika", "1:3", 2);
+        model.addScore("luna", "pera2", "3:2", 1);
+        model.addScore("pera", "mika", "1:3", 2);
+        model.addScore("pera", "mika", "1:2", 2);
+        model.addScore("mika", "pera", "3:0", 1);
+        model.addScore("mika", "pera", "1:3", 2);
+        model.addScore("djoka", "pera", "3:1", 1);
+        model.addScore("pera", "mika", "1:3", 2);
+        model.addScore("djko", "pera2", "3:2", 1);*/
     }
 
     private void setDefaultValues() {
@@ -61,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt("goalsProgress", 20);
         editor.commit();
 
+    }
+
+    public MyDataHelper getModel(){
+        return model;
     }
 
     private void setOnTouchListener(TextView view) {
@@ -169,6 +190,11 @@ public class MainActivity extends AppCompatActivity {
 
     private int getGoldColor() { return ContextCompat.getColor(context, R.color.gold); }
     private int getWhiteColor() { return ContextCompat.getColor(context, R.color.white); }
+
+    @Override
+    public void onBackPressed() {
+        backFragment();
+    }
 
     private String getStringValue(int progress) {
         String retVal="";

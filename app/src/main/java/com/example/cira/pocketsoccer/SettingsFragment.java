@@ -140,6 +140,7 @@ public class SettingsFragment extends Fragment {
         });
     }
 
+
     private int getGoldColor() { return ContextCompat.getColor(context, R.color.gold); }
     private int getWhiteColor() { return ContextCompat.getColor(context, R.color.white); }
 
