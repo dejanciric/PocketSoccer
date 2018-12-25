@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StartGameFragment">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:columnCount="3">
+
+        <EditText
+            android:backgroundTint="@color/gold"
+            android:id="@+id/player1_name"
+            style="@style/TextStyle1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="30dp"
+            android:text="Player 1" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/TextStyle7"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="STATES" />
+
+            <TextView
+                style="@style/TextStyle7"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CLUBS" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/player2_name"
+            style="@style/TextStyle1"
+            android:backgroundTint="@color/gold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_marginRight="30dp"
+            android:text="Player 2" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="2"
+            android:layout_marginLeft="30dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/player1_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/ic_chevron_left_black_24dp"
+                android:scaleX="2"
+                android:scaleY="2" />
+
+            <ImageButton
+                android:id="@+id/player1_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/state1" />
+
+            <ImageButton
+                android:id="@+id/player1_right"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/ic_chevron_right_black_24dp"
+                android:scaleX="2"
+                android:scaleY="2" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/TextStyle1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_gravity="bottom"
+
+            android:layout_marginTop="50dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="2"
+            android:layout_marginRight="30dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/player2_left"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/ic_chevron_left_black_24dp"
+                android:scaleX="2"
+                android:scaleY="2" />
+
+            <ImageButton
+                android:id="@+id/player2_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/state1" />
+
+            <ImageButton
+                android:id="@+id/player2_right"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/ic_chevron_right_black_24dp"
+                android:scaleX="2"
+                android:scaleY="2" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/TextStyle7"
+            android:id="@+id/player1_flag_name"
+            android:layout_width="0dp"
+
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="30dp"
+            android:text="Serbia" />
+
+        <TextView
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1" />
+
+        <TextView
+            android:id="@+id/player2_flag_name"
+
+            style="@style/TextStyle7"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_marginRight="30dp"
+            android:text="Serbia" />
+
+
+        <RadioButton
+            android:buttonTint="@color/gold"
+            android:id="@+id/player1_radio"
+            style="@style/TextStyle8"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="100dp"
+            android:text="Computer" />
+
+        <TextView
+            android:id="@+id/start_game"
+            style="@style/TextStyle1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:gravity="top"
+            android:text="Start game " />
+
+        <RadioButton
+            android:id="@+id/player2_radio"
+            android:buttonTint="@color/gold"
+            style="@style/TextStyle8"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="70dp"
+            android:text="Computer" />
+
+        <TextView
+            style="@style/TextStyle1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_columnWeight="1" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_columnWeight="1" />
+
+    </GridLayout>
+
+</FrameLayout>

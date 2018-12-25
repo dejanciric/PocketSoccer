@@ -13,4 +13,6 @@
     <string name="back">BACK</string>
     <string name="time">TIME</string>
     <string name="goals">GOALS</string>
+    <string name="singleplayer">SINGLEPLAYER</string>
+    <string name="multiplayer">MULTIPLAYER</string>
 </resources>

@@ -14,27 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import beans.Score;
 
-
-public class DefaultFragment extends Fragment {
+public class NewGameFragment extends Fragment {
 
     private static Context context;
     private Fragment fragment = this;
 
-    public DefaultFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param con Parameter 1.
-     * @return A new instance of fragment DefaultFragment.
-     */
-    public static DefaultFragment newInstance(Context con) {
-        DefaultFragment fragment = new DefaultFragment();
+    public static NewGameFragment newInstance(Context con) {
+        NewGameFragment fragment = new NewGameFragment();
         context = con;
         return fragment;
     }
@@ -42,30 +29,22 @@ public class DefaultFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_default, container, false);
-
-        ((MainActivity)context).backSetInvisible();
-
-        TextView resume = view.findViewById(R.id.resume);
-        TextView newGame = view.findViewById(R.id.new_game);
-        TextView statistics = view.findViewById(R.id.statistics);
-        TextView settings = view.findViewById(R.id.settings);
-
-        setOnTouchListener(resume);
-        setOnTouchListener(newGame);
-        setOnTouchListener(settings);
-        setOnTouchListener(statistics);
+        View view = inflater.inflate(R.layout.fragment_new_game, container, false);
+        TextView singleplayer = view.findViewById(R.id.singleplayer);
+        TextView multiplayer = view.findViewById(R.id.multiplayer);
+        ((MainActivity)context).backSetVisible();
+        setOnTouchListener(singleplayer);
+        setOnTouchListener(multiplayer);
 
         return view;
-
     }
-
 
     private void setOnTouchListener(TextView view) {
         view.setOnClickListener(new View.OnClickListener() {
@@ -78,19 +57,13 @@ public class DefaultFragment extends Fragment {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();;
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();;
                 switch(v.getId()){
-                    case R.id.resume:
+                    case R.id.singleplayer:
+                        StartGameFragment startGameFragment = StartGameFragment.newInstance(context, "singleplayer");
+                        fragmentTransaction.replace(R.id.frame, startGameFragment);
                         break;
-                    case R.id.new_game:
-                        NewGameFragment newGameFragment = NewGameFragment.newInstance(context);
-                        fragmentTransaction.replace(R.id.frame, newGameFragment);
-                        break;
-                    case R.id.statistics:
-                        StatisticFragment statisticFragment = StatisticFragment.newInstance(context);
-                        fragmentTransaction.replace(R.id.frame, statisticFragment);
-                        break;
-                    case R.id.settings:
-                        SettingsFragment settingsFragment = SettingsFragment.newInstance(context);
-                        fragmentTransaction.replace(R.id.frame, settingsFragment);
+                    case R.id.multiplayer:
+                        StartGameFragment startGameFragment2 = StartGameFragment.newInstance(context, "multiplayer");
+                        fragmentTransaction.replace(R.id.frame, startGameFragment2);
                         break;
                 }
                 fragmentTransaction.commit();
@@ -117,4 +90,6 @@ public class DefaultFragment extends Fragment {
 
     private int getGoldColor() { return ContextCompat.getColor(context, R.color.gold); }
     private int getWhiteColor() { return ContextCompat.getColor(context, R.color.white); }
+
+
 }

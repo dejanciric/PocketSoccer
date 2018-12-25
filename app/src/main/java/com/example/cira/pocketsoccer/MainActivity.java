@@ -119,12 +119,16 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Log.i("valll", getStringValue(getGoalsProgress()));
         }*/
-        Log.i("valll", field+"");
-        Fragment fragment = stackTrace.pop();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame, fragment);
-        fragmentTransaction.commit();
+        //Log.i("valll", field+"");
+        if (stackTrace.size() == 0){
+            super.onBackPressed();
+        }else{
+            Fragment fragment = stackTrace.pop();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.frame, fragment);
+            fragmentTransaction.commit();
+        }
 
     }
 
@@ -191,11 +195,11 @@ public class MainActivity extends AppCompatActivity {
     private int getGoldColor() { return ContextCompat.getColor(context, R.color.gold); }
     private int getWhiteColor() { return ContextCompat.getColor(context, R.color.white); }
 
+
     @Override
     public void onBackPressed() {
         backFragment();
     }
-
     private String getStringValue(int progress) {
         String retVal="";
         if (rule.equals("time")){

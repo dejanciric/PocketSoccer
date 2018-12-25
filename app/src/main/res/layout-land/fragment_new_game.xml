@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DefaultFragment"
-    >
+    tools:context=".NewGameFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,42 +12,28 @@
         android:padding="30dp">
 
         <TextView
-
-            android:id="@+id/resume"
+            android:gravity="center"
+            android:id="@+id/singleplayer"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/resume_game"
+            android:text="@string/singleplayer"
             style="@style/TextStyle1"
 
-/>
-
-        <TextView
-            android:id="@+id/new_game"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/new_game"
-            style="@style/TextStyle1"
             />
 
         <TextView
-            android:id="@+id/statistics"
+            android:gravity="center"
+            android:id="@+id/multiplayer"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/statistics"
-            style="@style/TextStyle1"/>
+            android:text="@string/multiplayer"
+            style="@style/TextStyle1"
+            />
 
-        <TextView
-            android:id="@+id/settings"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/settings"
-            style="@style/TextStyle1"/>
+
 
 
     </LinearLayout>
-
 </FrameLayout>
