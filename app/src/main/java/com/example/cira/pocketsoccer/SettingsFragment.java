@@ -113,6 +113,12 @@ public class SettingsFragment extends Fragment {
                         editor.putInt("goalsProgress", 20);
                         editor.putInt("field", 0);
                         editor.commit();*/
+                        ((MainActivity)context).setField(0);
+                        ((MainActivity)context).setGoalsProgress(20);
+                        ((MainActivity)context).setTimeProgress(10);
+                        ((MainActivity)context).rule = "goals";
+                        ((MainActivity)context).gameSpeed = 3;
+
                         SharedPreferences preferences = context.getSharedPreferences("lastValues", MODE_PRIVATE);
                         preferences.edit().clear().commit();
                        // setAllParamsToDefault();

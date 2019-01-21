@@ -24,9 +24,9 @@ import model.MyDataHelper;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int gameSpeed;
-    private String rule;
-    private int field, timeProgress, goalsProgress;;
+    public int gameSpeed;
+    public String rule;
+    public int field, timeProgress, goalsProgress;;
     private String endGameValue;
     private Context context = this;
     private Stack<Fragment> stackTrace = new Stack<Fragment>();

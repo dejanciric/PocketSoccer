@@ -179,6 +179,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:gravity="top"
+            android:onClick="startGame"
             android:text="Start game " />
 
         <RadioButton

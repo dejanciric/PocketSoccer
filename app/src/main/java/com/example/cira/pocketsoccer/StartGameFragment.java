@@ -1,13 +1,11 @@
 package com.example.cira.pocketsoccer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import com.example.cira.pocketsoccer.game.SingleplayerActivity;
 
 
 public class StartGameFragment extends Fragment {
@@ -168,6 +168,26 @@ public class StartGameFragment extends Fragment {
                             case R.id.start_game:
                                 ((TextView)v).setTextColor(getGoldColor());
                                 // nova aktivnost za igru
+                                if (((MainActivity)context).rule==null){
+                                    ((MainActivity)context).setField(0);
+                                    ((MainActivity)context).setGoalsProgress(20);
+                                    ((MainActivity)context).setTimeProgress(10);
+                                    ((MainActivity)context).rule = "goals";
+                                    ((MainActivity)context).gameSpeed = 3;
+                                }
+                                Intent eksplicitniIntent = new Intent(context, SingleplayerActivity.class);
+                                eksplicitniIntent.putExtra("field", ((MainActivity)context).field);
+                                eksplicitniIntent.putExtra("rule", ((MainActivity)context).rule);
+                                eksplicitniIntent.putExtra("timeProgress", ((MainActivity)context).timeProgress);
+                                eksplicitniIntent.putExtra("goalsProgress", ((MainActivity)context).goalsProgress);
+                                eksplicitniIntent.putExtra("gameSpeed", ((MainActivity)context).gameSpeed);
+                                eksplicitniIntent.putExtra("currState1", currState1);
+                                eksplicitniIntent.putExtra("currState2", currState2);
+                                eksplicitniIntent.putExtra("player1Name", player1Name.getText().toString());
+                                eksplicitniIntent.putExtra("player2Name", player2Name.getText().toString());
+
+                                context.startActivity(eksplicitniIntent);
+
                                 break;
                             case R.id.player1_radio:
                                 ((RadioButton)v).setTextColor(getGoldColor());
@@ -208,6 +228,7 @@ public class StartGameFragment extends Fragment {
             }
         });
     }
+
 
     private int getGoldColor() { return ContextCompat.getColor(context, R.color.gold); }
     private int getWhiteColor() { return ContextCompat.getColor(context, R.color.white); }

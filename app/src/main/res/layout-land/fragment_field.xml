@@ -22,7 +22,7 @@
         android:background="@drawable/ic_chevron_left_black_24dp" />
     <ImageView
         android:id="@+id/field"
-        android:src="@drawable/field1"
+        android:src="@drawable/grass"
         android:scaleY="1"
         android:layout_weight="3"
         android:layout_width="0dp"

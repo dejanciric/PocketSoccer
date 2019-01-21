@@ -53,8 +53,9 @@ public class FieldFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fields.add(R.drawable.field1);
-        fields.add(R.drawable.field2);
+        fields.add(R.drawable.grass);
+        fields.add(R.drawable.concrete);
+        fields.add(R.drawable.parquet);
         curr = 0;
     }
 
