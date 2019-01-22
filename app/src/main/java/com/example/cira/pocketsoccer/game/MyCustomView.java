@@ -16,7 +16,7 @@ import com.example.cira.pocketsoccer.R;
 public class MyCustomView extends AppCompatImageView {
 
     private static final int PLAYER_SIZE = 180;
-    private static final int BALL_SIZE = 180;
+    private static final int BALL_SIZE = 90;
     private static final int MAX = 250;
 
     public Figure[] figures = new Figure[7];
@@ -24,7 +24,7 @@ public class MyCustomView extends AppCompatImageView {
 
 
     private int width, height;
-    private Bitmap background;
+    private Bitmap background, goalsBitmap, scoreboard;
     private int field, gameSpeed, currState1, currState2;
     private String rule,time, goals, player1Name,player2Name;
     private Paint paint;
@@ -64,6 +64,7 @@ public class MyCustomView extends AppCompatImageView {
 
         canvas.drawBitmap(background, 0, 0, paint);
 
+
         for(int i =0; i < figures.length; i++){
             canvas.drawBitmap(figures[i].bitmap, figures[i].getX(),  figures[i].getY(), paint);
 
@@ -75,8 +76,17 @@ public class MyCustomView extends AppCompatImageView {
             }
 
         }
-
-
+        canvas.drawBitmap(goalsBitmap, 0, 0, paint);
+        paint.setAlpha(150);
+        canvas.drawBitmap(scoreboard, 0.4f*width, 0,paint);
+        paint = new Paint();
+        /*paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(11);
+        canvas.drawLine(0f, 0.36f*height,0.055f*width, 0.36f*height, paint);
+        canvas.drawLine(0f, 0.64f*height,0.055f*width, 0.64f*height, paint);
+        canvas.drawLine(0.94f*width, 0.36f*height,width, 0.36f*height, paint);
+        canvas.drawLine(0.94f*width, 0.64f*height,width, 0.64f*height, paint);
+        paint = new Paint();*/
     }
 
     @Override
@@ -93,6 +103,7 @@ public class MyCustomView extends AppCompatImageView {
             background = BitmapFactory.decodeResource(getResources(), R.drawable.parquet);
         }
         background = Bitmap.createScaledBitmap(background, width, height, false);
+
 
         initialPositions();
         if (rule == "goals"){
@@ -124,6 +135,13 @@ public class MyCustomView extends AppCompatImageView {
         bitmap = Bitmap.createScaledBitmap(bitmap, BALL_SIZE, BALL_SIZE, false);
 
         figures[6] = new Figure(0.5f*width, 0.5f*height, bitmap, "ball", "ball");
+
+        goalsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.goals);
+        goalsBitmap = Bitmap.createScaledBitmap(goalsBitmap, width, height, false);
+        //bitmap = Bitmap.createScaledBitmap(bitmap, BALL_SIZE, BALL_SIZE, false);
+
+        scoreboard =  BitmapFactory.decodeResource(getResources(), R.drawable.scoreboard);
+        scoreboard = Bitmap.createScaledBitmap(scoreboard, 390, 150, false);
 
 
     }
