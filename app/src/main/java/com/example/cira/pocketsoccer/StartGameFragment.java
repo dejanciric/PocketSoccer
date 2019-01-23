@@ -2,6 +2,7 @@ package com.example.cira.pocketsoccer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.cira.pocketsoccer.game.SingleplayerActivity;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class StartGameFragment extends Fragment {
@@ -168,12 +171,26 @@ public class StartGameFragment extends Fragment {
                             case R.id.start_game:
                                 ((TextView)v).setTextColor(getGoldColor());
                                 // nova aktivnost za igru
-                                if (((MainActivity)context).rule==null){
-                                    ((MainActivity)context).setField(0);
-                                    ((MainActivity)context).setGoalsProgress(20);
-                                    ((MainActivity)context).setTimeProgress(10);
-                                    ((MainActivity)context).rule = "goals";
+                                SharedPreferences sharedPreferences = context.getSharedPreferences("lastValues", MODE_PRIVATE);
+                                ((MainActivity)context).field = sharedPreferences.getInt("field", -1);
+                                if (((MainActivity)context).field == -1){
+                                    ((MainActivity)context).field = 0;
+                                }
+                                ((MainActivity)context).gameSpeed =  sharedPreferences.getInt("speed", -1);
+                                if (((MainActivity)context).gameSpeed == -1){
                                     ((MainActivity)context).gameSpeed = 3;
+                                }
+                                ((MainActivity)context).rule = sharedPreferences.getString("rule", "");
+                                if (((MainActivity)context).rule.equals("")){
+                                    ((MainActivity)context).rule="goals";
+                                }
+                                ((MainActivity)context).timeProgress = sharedPreferences.getInt("timeProgress", -1);
+                                if(((MainActivity)context).timeProgress==-1){
+                                    ((MainActivity)context).timeProgress = 10;
+                                }
+                                ((MainActivity)context).goalsProgress = sharedPreferences.getInt("goalsProgress", -1);
+                                if (((MainActivity)context).goalsProgress == -1){
+                                    ((MainActivity)context).goalsProgress= 20;
                                 }
                                 Intent eksplicitniIntent = new Intent(context, SingleplayerActivity.class);
                                 eksplicitniIntent.putExtra("field", ((MainActivity)context).field);
@@ -186,7 +203,7 @@ public class StartGameFragment extends Fragment {
                                 eksplicitniIntent.putExtra("player1Name", player1Name.getText().toString());
                                 eksplicitniIntent.putExtra("player2Name", player2Name.getText().toString());
 
-                                context.startActivity(eksplicitniIntent);
+                                ((MainActivity) context).startActivityForResult(eksplicitniIntent, 100);
 
                                 break;
                             case R.id.player1_radio:

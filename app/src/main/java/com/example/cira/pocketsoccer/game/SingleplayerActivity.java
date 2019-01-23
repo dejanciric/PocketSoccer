@@ -35,7 +35,7 @@ public class SingleplayerActivity extends AppCompatActivity {
         player2Name=mojIntent.getStringExtra("player2Name");
 
         myCustomView = findViewById(R.id.customView);
-        myCustomView.setParams(field, rule, getStringValue(timeProgress), getStringValue(goalsProgress), gameSpeed,currState1,currState2, player1Name, player2Name);
+        myCustomView.setParams(field, rule, getStringValue(timeProgress), getStringValue(goalsProgress), gameSpeed,currState1,currState2, player1Name, player2Name, this);
 
         myCustomView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -59,27 +59,27 @@ public class SingleplayerActivity extends AppCompatActivity {
 
     private String getStringValue(int progress) {
         String retVal="";
-        if (rule == "time"){
+        if (rule.equals("time")){
             if (progress >= 0 && progress < 10)
-                retVal = "0:30";
+                retVal = "00:30";
             else if (progress >=10 && progress < 20)
-                retVal = "1:00";
+                retVal = "01:00";
             else if (progress >=20 && progress < 30)
-                retVal = "1:30";
+                retVal = "01:30";
             else if (progress >=30 && progress < 40)
-                retVal = "2:00";
+                retVal = "02:00";
             else if (progress >=40 && progress < 50)
-                retVal = "2:30";
+                retVal = "02:30";
             else if (progress >=50 && progress < 60)
-                retVal = "3:00";
+                retVal = "03:00";
             else if (progress >=60 && progress < 70)
-                retVal = "3:30";
+                retVal = "03:30";
             else if (progress >=70 && progress < 80)
-                retVal = "4:00";
+                retVal = "04:00";
             else if (progress >=80 && progress < 90)
-                retVal = "4:30";
+                retVal = "04:30";
             else if (progress >=90 && progress <= 100)
-                retVal = "5:00";
+                retVal = "05:00";
         }else{
             if (progress >= 0 && progress < 10)
                 retVal = "1";

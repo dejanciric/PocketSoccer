@@ -7,10 +7,11 @@ public class MyThread extends Thread {
     private int frameRate;
     private String time;
     private MyCustomView myCustomView;
-    private boolean pickTimeForDraw = true, active = true;
-    private long startTimeForDraw;
+    public boolean pickTimeForDraw = true, active = true, pickTimeForSecond=true;
+    private long startTimeForDraw, startTimeForSecond;
     private int width, height;
-
+    public int count = 0;
+    public boolean goal = false;
     private static final float POST_MASS = 90*0.5f;
 
     private Coordinate[] goalPostCoordinates = new Coordinate[4];
@@ -65,6 +66,28 @@ public class MyThread extends Thread {
                 pickTimeForDraw = false;
             }
 
+            if (pickTimeForSecond){
+                startTimeForSecond = System.currentTimeMillis();
+                pickTimeForSecond = false;
+            }
+
+            if (System.currentTimeMillis()-startTimeForSecond >= 1000){
+                if(!goal){
+                    myCustomView.second();
+                }
+
+
+                if (count != 0){
+                    count--;
+                    if (count == 0){
+                        myCustomView.startAgain();
+                        goal=false;
+                    }
+                }
+                pickTimeForSecond = true;
+
+            }
+
             //for draw
             if(System.currentTimeMillis() - startTimeForDraw >= frameRate){
 
@@ -78,8 +101,38 @@ public class MyThread extends Thread {
 
                 checkCrashGoalpost();
 
+                checkLeftGoal();
+
+                checkRightGoal();
+
                 myCustomView.invalidate();
                 pickTimeForDraw = true;
+            }
+        }
+
+    }
+
+    private void checkLeftGoal() {
+        if (!goal){
+            if (figures[6].x < goalPostCoordinates[0].x && figures[6].y > goalPostCoordinates[0].y && figures[6].y < goalPostCoordinates[1].y){
+                myCustomView.rightScore++;
+                myCustomView.goal();
+                myCustomView.turn = "left";
+                goal = true;
+            }
+        }
+
+    }
+
+
+
+    private void checkRightGoal() {
+        if(!goal){
+            if (figures[6].x > goalPostCoordinates[2].x && figures[6].y > goalPostCoordinates[2].y && figures[6].y < goalPostCoordinates[3].y){
+                myCustomView.leftScore++;
+                myCustomView.goal();
+                myCustomView.turn = "right";
+                goal = true;
             }
         }
 
@@ -162,7 +215,7 @@ public class MyThread extends Thread {
         float dpTan2 =  figures[i].dx *tx +  figures[i].dy *ty;
         float dpNorm2 =  figures[i].dx *nx +  figures[i].dy *ny;
         float m2;
-        if (figures[i].type=="ball"){
+        if (figures[i].type.equals("ball")){
             m2 = (dpNorm2 * (figures[i].mass - POST_MASS/2)+2.0f*POST_MASS*2.5f)/(POST_MASS + figures[i].mass);
 
         }else{
@@ -190,7 +243,7 @@ public class MyThread extends Thread {
         float dpTan2 =  figures[i].dx *tx +  figures[i].dy *ty;
         float dpNorm2 =  figures[i].dx *nx +  figures[i].dy *ny;
         float m2;
-        if (figures[i].type=="ball"){
+        if (figures[i].type.equals("ball")){
             m2 = (dpNorm2 * (figures[i].mass - POST_MASS)+2.0f*POST_MASS*2.5f)/(POST_MASS + figures[i].mass);
 
         }else{
@@ -218,7 +271,7 @@ public class MyThread extends Thread {
         float dpTan2 =  figures[i].dx *tx +  figures[i].dy *ty;
         float dpNorm2 =  figures[i].dx *nx +  figures[i].dy *ny;
         float m2;
-        if (figures[i].type=="ball"){
+        if (figures[i].type.equals("ball")){
             m2 = (dpNorm2 * (figures[i].mass - POST_MASS)+2.0f*POST_MASS*2.5f)/(POST_MASS + figures[i].mass);
 
         }else{
@@ -245,7 +298,7 @@ public class MyThread extends Thread {
         float dpTan2 =  figures[i].dx *tx +  figures[i].dy *ty;
         float dpNorm2 =  figures[i].dx *nx +  figures[i].dy *ny;
         float m2;
-        if (figures[i].type=="ball"){
+        if (figures[i].type.equals("ball")){
             m2 = (dpNorm2 * (figures[i].mass - POST_MASS)+2.0f*POST_MASS*2.5f)/(POST_MASS + figures[i].mass);
 
         }else{

@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:layout_marginLeft="30dp"
-            android:text="Player 1" />
+            android:text="Player1" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:layout_marginRight="30dp"
-            android:text="Player 2" />
+            android:text="Player2" />
 
         <LinearLayout
             android:layout_width="0dp"

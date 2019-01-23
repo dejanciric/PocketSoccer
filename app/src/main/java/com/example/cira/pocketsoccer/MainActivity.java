@@ -2,8 +2,10 @@ package com.example.cira.pocketsoccer;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private Stack<Fragment> stackTrace = new Stack<Fragment>();
     private TextView back;
     private MyDataHelper model;
+    DefaultFragment defaultFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        DefaultFragment defaultFragment = DefaultFragment.newInstance(this);
+        defaultFragment = DefaultFragment.newInstance(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -67,6 +70,28 @@ public class MainActivity extends AppCompatActivity {
         model.addScore("djoka", "pera", "3:1", 1);
         model.addScore("pera", "mika", "1:3", 2);
         model.addScore("djko", "pera2", "3:2", 1);*/
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("lastValues", MODE_PRIVATE);
+        field = sharedPreferences.getInt("field", -1);
+        if (field == -1){
+            field = 0;
+        }
+        gameSpeed =  sharedPreferences.getInt("speed", -1);
+        if (gameSpeed == -1){
+            gameSpeed = 3;
+        }
+        rule = sharedPreferences.getString("rule", "");
+        if (rule.equals("")){
+            rule="goals";
+        }
+        timeProgress = sharedPreferences.getInt("timeProgress", -1);
+        if(timeProgress==-1){
+            timeProgress = 10;
+        }
+        goalsProgress = sharedPreferences.getInt("goalsProgress", -1);
+        if (goalsProgress == -1){
+            goalsProgress= 20;
+        }
     }
 
     private void setDefaultValues() {
@@ -246,5 +271,37 @@ public class MainActivity extends AppCompatActivity {
                 retVal = "10";
         }
         return retVal;
+    }
+
+    public void endGame(String players, String result){
+        String tmp[] = players.split("  ");
+        String res[] = result.split(":");
+        int result1;
+        if (Integer.parseInt(res[0])>Integer.parseInt(res[1])){
+            result1=1;
+        }else if (Integer.parseInt(res[1])>Integer.parseInt(res[0])){
+            result1 = 2;
+        }else{
+            result1=0;
+        }
+        model.addScore(tmp[0], tmp[2],result,result1);
+        pushFragment(defaultFragment);
+        FragmentManager fm  = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        backSetInvisible();
+        ScoresFragment scoresFragment = ScoresFragment.newInstance(context, players);
+        ft.replace(R.id.frame, scoresFragment);
+        ft.commitAllowingStateLoss();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 100){
+
+
+            endGame(data.getStringExtra("players"),data.getStringExtra("result"));
+
+
+        }
     }
 }

@@ -80,7 +80,7 @@ public class FieldFragment extends Fragment {
             }
         });
         // set last settings or default
-         sharedPreferences = context.getSharedPreferences("lastValues", MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("lastValues", MODE_PRIVATE);
         int s = sharedPreferences.getInt("field", -1);
         if (s != -1){
             ((MainActivity)context).setField(s);
