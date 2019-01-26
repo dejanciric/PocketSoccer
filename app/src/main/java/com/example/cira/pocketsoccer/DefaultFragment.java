@@ -1,6 +1,7 @@
 package com.example.cira.pocketsoccer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.cira.pocketsoccer.game.GameActivity;
 
 import beans.Score;
 
@@ -62,6 +65,13 @@ public class DefaultFragment extends Fragment {
         setOnTouchListener(settings);
         setOnTouchListener(statistics);
 
+
+        if (((MainActivity) context).showResume){
+            resume.setVisibility(View.VISIBLE);
+        }else{
+            resume.setVisibility(View.GONE);
+        }
+
         return view;
 
     }
@@ -79,6 +89,8 @@ public class DefaultFragment extends Fragment {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();;
                 switch(v.getId()){
                     case R.id.resume:
+                        Intent eksplicitniIntent = new Intent(context, GameActivity.class);
+                        ((MainActivity) context).startActivityForResult(eksplicitniIntent, 100);
                         break;
                     case R.id.new_game:
                         NewGameFragment newGameFragment = NewGameFragment.newInstance(context);

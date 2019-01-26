@@ -3,6 +3,7 @@ package com.example.cira.pocketsoccer.game;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,44 +11,52 @@ import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.example.cira.pocketsoccer.MainActivity;
 import com.example.cira.pocketsoccer.R;
 
-public class MyCustomView extends AppCompatImageView {
+import static android.content.Context.MODE_PRIVATE;
 
+public class MyCustomView extends AppCompatImageView {
+    MediaPlayer mpSecond;
     private static final int PLAYER_SIZE = 180;
     private static final int BALL_SIZE = 90;
     private static final int MAX = 250;
     private boolean pressed = false;
     private  Bitmap goalBitmap;
-    private MyThread myThread;
+    public MyThread myThread;
+    MediaPlayer mpStart;
+    public int computer;
+    MediaPlayer mpGoal;
 
     public Figure[] figures = new Figure[7];
     private int[] stateFlags = {R.drawable.state1,R.drawable.state2,R.drawable.state3,R.drawable.state4};
-
-    private String winner="";
-    private int width, height;
+    public boolean restore = false;
+    public String winner="";
+    public int width, height;
     private Bitmap background, goalsBitmap =null, scoreboard;
     private int field, gameSpeed, currState1, currState2;
-    private String rule,time, goals, player1Name,player2Name;
+    public String rule,time, goals, player1Name,player2Name;
     private Paint paint;
     private Figure selectedFigure;
 
-    private int seconds;
+    public int seconds;
     public String turn;
 
     public int leftScore=0, rightScore=0;
 
-    SingleplayerActivity context;
+    GameActivity context;
     public MyCustomView(Context context) {
         super(context);
         init();
 
+    }
+
+    public void setContext(GameActivity context){
+        this.context = context;
     }
 
     public MyCustomView(Context context, AttributeSet attrs) {
@@ -67,15 +76,15 @@ public class MyCustomView extends AppCompatImageView {
 
         paint = new Paint();
         invalidate();
-        seconds = 5;
-        turn="left";
-        shadowRight();
+
+        if(!restore){
+            seconds = 5;
+            turn="left";
+        }
 
     }
 
-    private void shadowRight() {
 
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -92,7 +101,7 @@ public class MyCustomView extends AppCompatImageView {
         paint = new Paint();
 
         for(int i =0; i < figures.length; i++){
-            if (turn =="left"){
+            if (turn.equals("left")){
                 if (i > 2 && i < 6){
                     ColorMatrix ma = new ColorMatrix();
                     ma.setSaturation(0);
@@ -153,10 +162,10 @@ public class MyCustomView extends AppCompatImageView {
         if (goalBitmap != null){
             paint.setAlpha(200);
             canvas.drawBitmap(goalBitmap, 0.25f*width, 0.15f*height, paint);
-            if (winner != ""){
+            if (!winner.equals("")){
                 paint.setTextSize(100);
                 paint.setColor(Color.WHITE);
-                if (winner !="draw"){
+                if (!winner.equals("draw")){
                     canvas.drawText(winner+" WON!",0.3f*width,0.55f*height,paint);
                 }else{
                     canvas.drawText("DRAW",0.43f*width,0.55f*height,paint);
@@ -182,6 +191,8 @@ public class MyCustomView extends AppCompatImageView {
         width = w;
         height = h;
 
+
+
         if (field==0){
             background = BitmapFactory.decodeResource(getResources(), R.drawable.grass);
         }else if (field == 1){
@@ -193,13 +204,18 @@ public class MyCustomView extends AppCompatImageView {
 
 
         initialPositions();
-        if (rule == "goals"){
+        if (rule.equals("goals")){
             myThread =new MyThread(figures,gameSpeed,time, this, width, height);
             myThread.start();
         }else{
             myThread =new MyThread(figures,gameSpeed, this, width, height);
             myThread.start();
        }
+
+        if (restore){
+            context.restore();
+
+        }
 
     }
 
@@ -226,19 +242,25 @@ public class MyCustomView extends AppCompatImageView {
         figures[6] = new Figure(0.5f*width, 0.5f*height, bitmap, "ball", "ball");
 
         goalsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.goals);
+        goalsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.goals);
         goalsBitmap = Bitmap.createScaledBitmap(goalsBitmap, width, height, false);
         //bitmap = Bitmap.createScaledBitmap(bitmap, BALL_SIZE, BALL_SIZE, false);
 
         scoreboard =  BitmapFactory.decodeResource(getResources(), R.drawable.scoreboard);
         scoreboard = Bitmap.createScaledBitmap(scoreboard, 390, 150, false);
         seconds=5;
+        mpStart = MediaPlayer.create(context, R.raw.start_pipe);
+        mpStart.start();
 
     }
 
     public void restart(){
-
+        for(int i=0; i < 7; i++){
+            figures[i].dx= figures[i].dy =0;
+        }
+        mpStart.start();
         figures[0].x = 0.15f*width;
-        figures[0].y = 0.15f*width;
+        figures[0].y = 0.15f*height;
 
         figures[1].x = 0.3f*width;
         figures[1].y = 0.5f*height;
@@ -261,7 +283,7 @@ public class MyCustomView extends AppCompatImageView {
         seconds=5;
     }
 
-    public void setParams(int field, String rule, String time, String goals, int gameSpeed, int currState1, int currState2, String player1Name, String player2Name, SingleplayerActivity context) {
+    public void setParams(int field, String rule, String time, String goals, int gameSpeed, int currState1, int currState2, String player1Name, String player2Name, GameActivity context, int computer) {
         this.field = field;
         this.rule = rule;
         this.time = time;
@@ -272,38 +294,59 @@ public class MyCustomView extends AppCompatImageView {
         this.player1Name = player1Name;
         this.player2Name = player2Name;
         this.context = context;
+        this.computer = computer;
+
+        mpSecond = MediaPlayer.create(context, R.raw.second);
     }
 
     public void down(float x, float y) {
-        if (turn == "left"){
-            for (int i = 0; i < 3; i++){
-                if (x <= figures[i].x+figures[i].r && x >= figures[i].x-figures[i].r && y <= figures[i].y+figures[i].r && y >= figures[i].y-figures[i].r){
-                    selectedFigure = figures[i];
-                    selectedFigure.selected = true;
-                    pressed = true;
-                    break;
+        if (turn.equals("left")){
+
+                for (int i = 0; i < 3; i++){
+                    if (x <= figures[i].x+figures[i].r && x >= figures[i].x-figures[i].r && y <= figures[i].y+figures[i].r && y >= figures[i].y-figures[i].r){
+                        selectedFigure = figures[i];
+                        selectedFigure.selected = true;
+                        pressed = true;
+                        if(computer ==1){
+                            up(figures[6].x,figures[6].y);
+                        }
+                        break;
+                    }
                 }
-            }
+
 
         }else{
-            for (int i = 3; i < figures.length-1; i++){
-                if (x <= figures[i].x+figures[i].r && x >= figures[i].x-figures[i].r && y <= figures[i].y+figures[i].r && y >= figures[i].y-figures[i].r){
-                    selectedFigure = figures[i];
-                    selectedFigure.selected = true;
-                    pressed = true;
-                    break;
+
+                for (int i = 3; i < figures.length-1; i++){
+                    if (x <= figures[i].x+figures[i].r && x >= figures[i].x-figures[i].r && y <= figures[i].y+figures[i].r && y >= figures[i].y-figures[i].r){
+                        selectedFigure = figures[i];
+                        selectedFigure.selected = true;
+                        pressed = true;
+                        if(computer ==2){
+                            up(figures[6].x,figures[6].y);
+                        }
+                        break;
+                    }
                 }
-            }
+
+
 
         }
 
     }
 
+
     public void up(float x, float y) {
         if (pressed){
-            if (turn=="left"){
+            if (turn.equals("left")){
+                if (computer == 2){
+                    myThread.pickTimeForBot = true;
+                }
                 turn = "right";
             }else{
+                if (computer == 1){
+                    myThread.pickTimeForBot = true;
+                }
                 turn = "left";
             }
             seconds = 5;
@@ -335,12 +378,27 @@ public class MyCustomView extends AppCompatImageView {
         if (winner.equals("")){
             seconds--;
             if (seconds == 0){
-                if (turn=="left"){
+                if (turn.equals("left")){
+                    if (computer == 2){
+                        myThread.pickTimeForBot = true;
+                    }
+
                     turn = "right";
                 }else{
+                    if (computer == 1){
+                        myThread.pickTimeForBot = true;
+                    }
                     turn = "left";
                 }
                 seconds = 5;
+                if (selectedFigure != null){
+                    selectedFigure.selected = false;
+                    pressed = false;
+                }
+            }
+            if (seconds < 3){
+
+                mpSecond.start();
             }
             if (rule.equals("time")){
                 String tmp[] = time.split(":");
@@ -367,7 +425,11 @@ public class MyCustomView extends AppCompatImageView {
     }
 
     public void endGameOnTime(){
+        final MediaPlayer mp = MediaPlayer.create(context, R.raw.end);
 
+        mp.start();
+        SharedPreferences preferences = context.getSharedPreferences("resume", MODE_PRIVATE);
+        preferences.edit().clear().commit();
         for (int i =0; i < figures.length; i++){
             figures[i].dx *= 0.2;
             figures[i].dy *= 0.2;
@@ -387,17 +449,28 @@ public class MyCustomView extends AppCompatImageView {
 
     public void goal(){
 
+        mpGoal = MediaPlayer.create(context, R.raw.goal);
+        mpGoal.start();
+
         for (int i =0; i < figures.length; i++){
             figures[i].dx *= 0.2;
             figures[i].dy *= 0.2;
         }
         if (rule.equals("goals")){
             if ((leftScore+"").equals(goals)){
+                final MediaPlayer mp = MediaPlayer.create(context, R.raw.end);
+                mp.start();
+                SharedPreferences preferences = context.getSharedPreferences("resume", MODE_PRIVATE);
+                preferences.edit().clear().commit();
                 winner = player1Name;
                 goalBitmap =  BitmapFactory.decodeResource(getResources(), R.drawable.scoreboard);
                 goalBitmap = Bitmap.createScaledBitmap(goalBitmap, 1000, 800, false);
                 myThread.count = 5;
             }else if ((rightScore+"").equals(goals)){
+                final MediaPlayer mp = MediaPlayer.create(context, R.raw.end);
+                mp.start();
+                SharedPreferences preferences = context.getSharedPreferences("resume", MODE_PRIVATE);
+                preferences.edit().clear().commit();
                 winner = player2Name;
                 goalBitmap =  BitmapFactory.decodeResource(getResources(), R.drawable.scoreboard);
                 goalBitmap = Bitmap.createScaledBitmap(goalBitmap, 1000, 800, false);
@@ -417,8 +490,9 @@ public class MyCustomView extends AppCompatImageView {
     }
 
     public void startAgain(){
-        if (winner == ""){
+        if (winner.equals("")){
             goalBitmap = null;
+            myThread.flag =false;
             restart();
         }else{
             myThread.active = false;
@@ -430,6 +504,31 @@ public class MyCustomView extends AppCompatImageView {
             context.finish();
 
 
+        }
+
+    }
+
+    public void decode() {
+        height = this.getLayoutParams().height;
+        width = this.getLayoutParams().width;
+
+        if (field==0){
+            background = BitmapFactory.decodeResource(getResources(), R.drawable.grass);
+        }else if (field == 1){
+            background = BitmapFactory.decodeResource(getResources(), R.drawable.concrete);
+        }else{
+            background = BitmapFactory.decodeResource(getResources(), R.drawable.parquet);
+        }
+        background = Bitmap.createScaledBitmap(background, width, height, false);
+
+
+        initialPositions();
+        if (rule.equals("goals")){
+            myThread =new MyThread(figures,gameSpeed,time, this, width, height);
+            myThread.start();
+        }else{
+            myThread =new MyThread(figures,gameSpeed, this, width, height);
+            myThread.start();
         }
 
     }

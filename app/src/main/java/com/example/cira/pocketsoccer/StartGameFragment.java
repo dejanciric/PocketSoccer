@@ -16,7 +16,7 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.example.cira.pocketsoccer.game.SingleplayerActivity;
+import com.example.cira.pocketsoccer.game.GameActivity;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -192,7 +192,7 @@ public class StartGameFragment extends Fragment {
                                 if (((MainActivity)context).goalsProgress == -1){
                                     ((MainActivity)context).goalsProgress= 20;
                                 }
-                                Intent eksplicitniIntent = new Intent(context, SingleplayerActivity.class);
+                                Intent eksplicitniIntent = new Intent(context, GameActivity.class);
                                 eksplicitniIntent.putExtra("field", ((MainActivity)context).field);
                                 eksplicitniIntent.putExtra("rule", ((MainActivity)context).rule);
                                 eksplicitniIntent.putExtra("timeProgress", ((MainActivity)context).timeProgress);
@@ -202,7 +202,19 @@ public class StartGameFragment extends Fragment {
                                 eksplicitniIntent.putExtra("currState2", currState2);
                                 eksplicitniIntent.putExtra("player1Name", player1Name.getText().toString());
                                 eksplicitniIntent.putExtra("player2Name", player2Name.getText().toString());
+                                if (player1Radio.isChecked()){
+                                    eksplicitniIntent.putExtra("computer", 1);
+                                }else if (player2Radio.isChecked()){
+                                    eksplicitniIntent.putExtra("computer", 2);
 
+                                }else{
+                                    eksplicitniIntent.putExtra("computer", 0);
+                                }
+                                SharedPreferences preferences = context.getSharedPreferences("resume", MODE_PRIVATE);
+                                preferences.edit().clear().commit();
+                                ((MainActivity) context).showResume = true;
+                                ((MainActivity) context).backFragment();
+                                ((MainActivity) context).backFragment();
                                 ((MainActivity) context).startActivityForResult(eksplicitniIntent, 100);
 
                                 break;

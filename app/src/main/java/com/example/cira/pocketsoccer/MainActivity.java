@@ -20,6 +20,9 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.example.cira.pocketsoccer.game.ResumeStorage;
+import com.google.gson.Gson;
+
 import java.util.Stack;
 
 import model.MyDataHelper;
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private Stack<Fragment> stackTrace = new Stack<Fragment>();
     private TextView back;
     private MyDataHelper model;
+    public boolean showResume;
     DefaultFragment defaultFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +95,15 @@ public class MainActivity extends AppCompatActivity {
         goalsProgress = sharedPreferences.getInt("goalsProgress", -1);
         if (goalsProgress == -1){
             goalsProgress= 20;
+        }
+
+        SharedPreferences sp = getSharedPreferences("resume",MODE_PRIVATE);
+        String json = sp.getString("ResumeStorage", "");
+        if (json.equals("")){
+            showResume = false;
+        }else{
+
+            showResume = true;
         }
     }
 
@@ -298,8 +311,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == 100){
 
+            SharedPreferences sharedPreferences = getSharedPreferences("resume",MODE_PRIVATE);
+            String json = sharedPreferences.getString("ResumeStorage", "");
+            if (json.equals("")){
+                SharedPreferences preferences = context.getSharedPreferences("resume", MODE_PRIVATE);
+                preferences.edit().clear().commit();
+                endGame(data.getStringExtra("players"),data.getStringExtra("result"));
+                showResume = false;
 
-            endGame(data.getStringExtra("players"),data.getStringExtra("result"));
+            }else{
+
+                showResume = true;
+            }
+
 
 
         }

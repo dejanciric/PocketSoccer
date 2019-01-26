@@ -23,7 +23,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".game.SingleplayerActivity"
+        <activity android:name=".game.GameActivity"
                   android:screenOrientation="landscape"></activity>
     </application>
 
