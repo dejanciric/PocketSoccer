@@ -82,6 +82,7 @@ public class SpeedFragment extends Fragment {
         }else{
             SharedPreferences sp = context.getSharedPreferences("defaultValues", MODE_PRIVATE);
             currSpeed = sp.getInt("speed", -1);
+            if (currSpeed == -1) currSpeed = 3;
             ((MainActivity)context).setGameSpeed(currSpeed);
             speeds.get(currSpeed-1).setTextColor(getGoldColor());
         }
